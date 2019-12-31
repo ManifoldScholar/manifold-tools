@@ -3,12 +3,13 @@
 require 'thor'
 require "zeitwerk"
 require 'pry'
+require 'active_support'
+require 'active_support/core_ext'
 
 loader = Zeitwerk::Loader.for_gem
-# loader.log!
 loader.ignore("#{__dir__}/version.rb")
 loader.push_dir("~/src/manifold-tools/lib")
-loader.setup # ready!
+loader.setup
 
 module Manifold
   module Tools
@@ -20,14 +21,69 @@ module Manifold
       # Error raised by this runner
       Error = Class.new(StandardError)
 
-      desc 'version', 'manifold-tools version'
+      desc 'version', 'Output the current version of manifold-tools'
       def version
         require_relative 'version'
         puts "v#{Manifold::Tools::VERSION}"
       end
       map %w(--version -v) => :version
 
-      desc 'configure', 'Command description...'
+      desc 'clean', 'cleans the underlying repositories'
+      method_option :help, aliases: '-h', type: :boolean,
+                    desc: 'Display usage information'
+      def clean(*)
+        if options[:help]
+          invoke :help, ['pusclean']
+        else
+          require_relative 'commands/clean'
+          Manifold::Tools::Commands::Clean.new(options).execute
+        end
+      end
+
+
+      desc 'publish VERSION', 'Commits changes and tags repositories. Pushes repos, uploads packages, and published docs.'
+      method_option :help, aliases: '-h', type: :boolean,
+                           desc: 'Display usage information'
+      method_option :skip_checks, type: :boolean, default: false, desc: "If true, manifold-tools will not check for missing packages."
+      method_option :no_overwrite, type: :boolean, default: false, desc: "If true, existing packages will not be overwritten."
+      def publish(version)
+        if options[:help]
+          invoke :help, ['publish']
+        else
+          require_relative 'commands/publish'
+          Manifold::Tools::Commands::Publish.new(version, options).execute
+        end
+      end
+
+      method_option :development, type: :boolean, default: false, desc: "If true, checks will be a little bit more lax"
+      desc 'package PLATFORM', 'Create all operating system packages'
+      method_option :help, aliases: '-h', type: :boolean,
+                           desc: 'Display usage information'
+      def package(platform)
+        if options[:help]
+          invoke :help, ['package']
+        else
+          require_relative 'commands/package'
+          Manifold::Tools::Commands::Package.new(platform, options).execute
+        end
+      end
+
+      desc 'build', 'Build Manifold and create Docker images and OS packages'
+      method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
+      method_option :version, type: :string, desc: "The version that you will build. If a tag exists, it will be checked out. If not, repositories will be tagged."
+      method_option :branch, type: :string, default: "master", desc: "If you're not building an existing tag, the release will be built from this branch"
+      method_option :no_overwrite, type: :boolean, default: false, desc: "If true, existing packages will not be overwritten."
+      method_option :development, type: :boolean, default: false, desc: "If true, build will not complain if the repositories are dirty."
+      def build(*)
+        if options[:help]
+          invoke :help, ['build']
+        else
+          require_relative 'commands/build'
+          Manifold::Tools::Commands::Build.new(options).execute
+        end
+      end
+
+      desc 'configure', 'Configure manifold-tools.'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
       def configure(*)
@@ -39,31 +95,7 @@ module Manifold
         end
       end
 
-      desc 'publish', 'Command description...'
-      method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
-      def publish(*)
-        if options[:help]
-          invoke :help, ['publish']
-        else
-          require_relative 'commands/publish'
-          Manifold::Tools::Commands::Publish.new(options).execute
-        end
-      end
-
-      desc 'build', 'Command description...'
-      method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
-      def build(*)
-        if options[:help]
-          invoke :help, ['build']
-        else
-          require_relative 'commands/build'
-          Manifold::Tools::Commands::Build.new(options).execute
-        end
-      end
-
-      desc 'changelog', 'Command description...'
+      desc 'changelog', 'Generate the current changelog.'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
       method_option :refresh, type: :boolean,

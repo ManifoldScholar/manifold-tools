@@ -1,4 +1,4 @@
-require 'manifold/tools/commands/release'
+require 'manifold/tools/commands/build'
 
 RSpec.describe Manifold::Tools::Commands::Release do
   it "executes `release` command successfully" do

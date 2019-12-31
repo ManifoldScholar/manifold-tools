@@ -20,6 +20,10 @@ module Models
       @value = new_value
     end
 
+    def to_semantic_string
+      @semantic.to_s
+    end
+
     def to_s
       "v#{@semantic}"
     end

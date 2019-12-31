@@ -8,7 +8,7 @@ module Manifold
       class Configure < Manifold::Tools::Command
 
         def execute(input: $stdin, output: $stdout)
-          outcome = Interactions::Configure.run()
+          outcome = Interactions::Command::Configure.run()
           config = outcome.result
           success_msg = "Settings saved to #{config.write_location}"
           report(outcome, success_msg)
