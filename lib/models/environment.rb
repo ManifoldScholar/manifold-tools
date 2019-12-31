@@ -14,6 +14,14 @@ module Models
       @env
     end
 
+    def root_path
+      File.expand_path(File.join("__dir__", "../"))
+    end
+
+    def repositories_path
+      File.join(root_path, "repositories")
+    end
+
     attr_lazy_reader :github do
       Models::Github.new env: self
     end

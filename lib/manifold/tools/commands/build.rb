@@ -8,9 +8,8 @@ module Manifold
       class Build < Manifold::Tools::Command
 
         def execute(input: $stdin, output: $stdout)
-          outcome = result = ::Interactions::ReleaseNewVersion.run(environment: Models::Environment.new, options: @options)
-          success_msg = "Build request submitted to Jenkins."
-          report(outcome, success_msg)
+          outcome = Interactions::Command::Build.run(environment: Models::Environment.new, options: @options)
+          report(outcome)
         end
       end
     end

@@ -58,7 +58,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "pastel", "~> 0.7.2"
   spec.add_dependency "thor", "~> 0.20.0"
   spec.add_dependency "zeitwerk", "~> 2.1.0"
-
   spec.add_dependency "active_interaction"
   spec.add_dependency "commander"
   spec.add_dependency "dotenv"
@@ -75,6 +74,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "octokit"
   spec.add_dependency "faraday-http-cache"
   spec.add_dependency "oj"
+  spec.add_dependency "google-cloud"
+  spec.add_dependency "google-cloud-storage"
 
   spec.add_development_dependency 'pry', '~> 0.12.2'
   spec.add_development_dependency "bundler", "~> 1.17"
