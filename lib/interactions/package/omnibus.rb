@@ -16,14 +16,17 @@ module Interactions
       private
 
       def build
-        say "Installing omnibus gem dependencies"
-        manifold_omnibus.bundle_install
         say "Rsyncing Manifold source into manifold-omnibus directory"
         manifold_omnibus.rsync_manifold_src
         say "Bringing up the builder"
         manifold_omnibus.machine_up("#{platform}-builder")
         manifold_omnibus.build(platform)
         manifold_omnibus.machine_down("#{platform}-builder")
+      end
+
+      def prepare
+        say "Installing omnibus gem dependencies"
+        manifold_omnibus.bundle_install
       end
 
       def package_exists?(platform, version)

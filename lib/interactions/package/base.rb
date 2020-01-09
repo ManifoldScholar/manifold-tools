@@ -5,6 +5,7 @@ module Interactions
     class Base < Interactions::BaseInteraction
 
       def execute
+        prepare
         say "Packaging for #{platform}"
         if with_checks
           checks_passed = run_checks
@@ -16,6 +17,9 @@ module Interactions
       end
 
       private
+
+      def prepare
+      end
 
       def build
         raise NotImplementedError

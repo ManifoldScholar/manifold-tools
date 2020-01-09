@@ -185,6 +185,12 @@ module Models
         return nil
       end
 
+      def bundle_install
+        Dir.chdir(@path) {
+          return cmd(:quiet).run("bundle install")
+        }
+      end
+
       def reload
         @versions = get_versions
       end

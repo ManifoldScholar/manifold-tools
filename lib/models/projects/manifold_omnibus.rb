@@ -7,7 +7,7 @@ module Models::Projects
 
     def all_packages
       Dir.chdir(@path) do
-        out, err = cmd.run("rake packages:list")
+        out, err = cmd.run("bundle exec rake packages:list")
         return JSON.parse(out)
       end
     end
@@ -29,7 +29,7 @@ module Models::Projects
       raise "invalid platform" unless platform && !platform.empty?
       raise "invalid version" unless version && !version.to_semantic_string.empty?
       package = package_path(platform, version)
-      metadata = metadata_path(paltform, version)
+      metadata = metadata_path(platform, version)
       TTY::Command.new.run("rm #{package}") if File.exist?(package)
       TTY::Command.new.run("rm #{metadata}") if File.exist?(metadata)
     end
@@ -52,15 +52,9 @@ module Models::Projects
 
     def valid_platforms
       Dir.chdir(@path) do
-        out, err = cmd.run("rake introspection:platforms")
+        out, err = cmd.run("bundle exec rake introspection:platforms")
         return JSON.parse(out).select { |p| p != "macos" }
       end
-    end
-
-    def bundle_install
-      Dir.chdir(@path) {
-        return cmd(:quiet).run("bundle install")
-      }
     end
 
     def machine_up(machine)
@@ -77,14 +71,14 @@ module Models::Projects
 
     def build(platform)
       Dir.chdir(@path){
-        cmd(:quiet).run("rake build:#{platform}")
+        cmd(:quiet).run("bundle exec rake build:#{platform}")
       }
     end
 
     def install(platform, version)
       Dir.chdir(@path){
         package_file = generate_package_filename(platform, version)
-        cmd(:quiet).run("rake install:#{platform}[#{package_file}]")
+        cmd(:quiet).run("bundle exec rake install:#{platform}[#{package_file}]")
       }
     end
 

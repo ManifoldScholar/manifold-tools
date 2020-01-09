@@ -19,6 +19,11 @@ module Interactions
         manifold_docker.build(options[:no_overwrite])
       end
 
+      def prepare
+        say "Installing omnibus gem dependencies"
+        manifold_docker.bundle_install
+      end
+
       def package_exists?(platform, version)
         manifold_docker.exists?(version)
       end
