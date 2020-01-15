@@ -7,6 +7,7 @@ module Interactions
       object :environment, class: 'Models::Environment'
       delegate :github, :projects, to: :environment
       delegate :manifold_source, to: :projects
+      object :unreleased_version, class: 'Models::Version', default: nil
 
       array :args, default: proc { [] } do
         string
@@ -40,7 +41,11 @@ module Interactions
           classified = classify(prs)
 
           if (version === "unreleased")
-            buffer << "## Unreleased - TBD"
+            if unreleased_version
+              buffer << "## [#{unreleased_version}](https://github.com/ManifoldScholar/manifold/tree/#{unreleased_version}) - #{Time.now.strftime("%m/%d/%y")}"
+            else
+              buffer << "## Unreleased - TBD"
+            end
           else
             buffer << "## [#{version}](https://github.com/ManifoldScholar/manifold/tree/#{version}) - #{date_for_version(version)}"
           end
