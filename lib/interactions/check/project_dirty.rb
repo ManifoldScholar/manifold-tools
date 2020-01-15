@@ -29,6 +29,7 @@ module Interactions
 
       def stash
         compose Interactions::Git::Stash, inputs
+        # TODO: we really need to make the release branch look like master (after fetching master)
       end
 
       def add_dirty_error
