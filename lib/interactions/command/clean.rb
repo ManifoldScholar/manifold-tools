@@ -10,6 +10,7 @@ module Interactions
         projects.each do |project|
           project.git.branch("master").checkout
           project.clean_build_branches
+          compose(Git::Fetch, inputs.merge(project: project))
           compose(Git::HardReset, inputs.merge(project: project, branch: "master"))
           compose(Git::PruneLocalTags, inputs.merge(project: project))
         end
