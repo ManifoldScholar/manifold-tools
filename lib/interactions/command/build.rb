@@ -92,7 +92,7 @@ module Interactions
             if project == projects.manifold_source
               say "Project is manifold_source. Building client and changelog.", project
               compose(Interactions::Build::Client, inputs)
-              compose(Interactions::Build::Changelog, inputs)
+              compose(Interactions::Build::Changelog, inputs.merge(unreleased_version: version))
             end
           end
         end
