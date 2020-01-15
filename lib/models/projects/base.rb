@@ -192,6 +192,12 @@ module Models
         }
       end
 
+      def gem_install_bundler(version)
+        Dir.chdir(@path) {
+          return cmd(:quiet).run("gem install bundler:#{version}")
+        }
+      end
+
       def reload
         @versions = get_versions
       end

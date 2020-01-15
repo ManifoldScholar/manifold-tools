@@ -21,6 +21,7 @@ module Interactions
 
       def prepare
         say "Installing omnibus gem dependencies"
+        manifold_docker.gem_install_bundler("1.17.2")
         manifold_docker.bundle_install
       end
 
