@@ -98,9 +98,11 @@ module Interactions
         end
 
         # Do the packaging.
-        compose(Interactions::Package::Omnibus, inputs.merge(platform: "ubuntu16", version: version, with_confirmation: false))
-        compose(Interactions::Package::Omnibus, inputs.merge(platform: "ubuntu18", version: version, with_confirmation: false))
-        compose(Interactions::Package::Omnibus, inputs.merge(platform: "centos7", version: version, with_confirmation: false))
+        projects.manifold_omnibus.gem_install_bundler("1.17.2")
+        projects.manifold_omnibus.bundle_install
+        compose(Interactions::Package::Omnibus, inputs.merge(platform: "ubuntu16", version: version, with_confirmation: false, skip_prepare: true))
+        compose(Interactions::Package::Omnibus, inputs.merge(platform: "ubuntu18", version: version, with_confirmation: false, skip_prepare: true))
+        compose(Interactions::Package::Omnibus, inputs.merge(platform: "centos7", version: version, with_confirmation: false, skip_prepare: true))
         compose(Interactions::Package::Docker, inputs.merge(version: version, with_confirmation: false))
 
         say "Build complete"

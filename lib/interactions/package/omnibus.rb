@@ -8,6 +8,7 @@ module Interactions
       object :options, class: "Thor::CoreExt::HashWithIndifferentAccess"
       boolean :with_confirmation, default: true
       boolean :with_checks, default: true
+      boolean :skip_prepare, default: false
       string :platform
 
       delegate :projects, to: :environment
@@ -25,7 +26,9 @@ module Interactions
       end
 
       def prepare
+        return if skip_prepare
         say "Installing omnibus gem dependencies"
+        manifold_omnibus.gem_install_bundler("1.17.2")
         manifold_omnibus.bundle_install
       end
 
