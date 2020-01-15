@@ -11,6 +11,7 @@ module Models::Projects
       @projects[:manifold_source] = Models::Projects::ManifoldSource.new manifold_source_path, manifold_source_repo
       @projects[:manifold_omnibus] = Models::Projects::ManifoldOmnibus.new manifold_omnibus_path, manifold_omnibus_repo, manifold_source_path: manifold_source_path
       @projects[:manifold_docker] = Models::Projects::ManifoldDocker.new manifold_docker_path, manifold_docker_repo, manifold_source_path: manifold_source_path
+      @projects[:manifold_docker_compose] = Models::Projects::ManifoldDockerCompose.new manifold_docker_compose_path, manifold_docker_compose_repo
     end
 
     def each
@@ -39,6 +40,10 @@ module Models::Projects
       @projects.fetch __method__
     end
 
+    def manifold_docker_compose
+      @projects.fetch __method__
+    end
+
     attr_lazy_reader :manifold_docs_path do
       File.join(env.repositories_path, "manifold-docs")
     end
@@ -51,6 +56,10 @@ module Models::Projects
       File.join(env.repositories_path, "manifold-docker")
     end
 
+    attr_lazy_reader :manifold_docker_compose_path do
+      File.join(env.repositories_path, "manifold-docker-compose")
+    end
+
     attr_lazy_reader :manifold_source_path do
       File.join(env.repositories_path, "manifold-src")
     end
@@ -61,6 +70,10 @@ module Models::Projects
 
     attr_lazy_reader :manifold_docker_repo do
       env_fetch(:docker, :name)
+    end
+
+    attr_lazy_reader :manifold_docker_compose_repo do
+      env_fetch(:docker_compose, :name)
     end
 
     attr_lazy_reader :manifold_omnibus_repo do
