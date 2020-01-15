@@ -12,3 +12,4 @@
 
 .idea
 repositories
+octokit_cache.db
