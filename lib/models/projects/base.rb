@@ -27,7 +27,8 @@ module Models
       end
 
       def manifold_version_file_current_value
-        File.read(manifold_version_file)
+        return nil unless File.exist? manifold_version_file
+        File.read manifold_version_file
       end
 
       attr_lazy_reader :name do
