@@ -36,7 +36,7 @@ module Interactions
         say "Current branch is #{dirty ? "" : "not" } dirty.", project
 
         # Give the option to stash if dirty
-        prompt_stash if dirty
+        prompt_stash if dirty unless in_staging_branch
         project.git.branch(staging_branch).checkout()
 
         # Compare to release and upstream staging branch and give options as needed.
