@@ -1,12 +1,12 @@
-require "tty-config"
+# frozen_string_literal: true
+
+require 'tty-config'
 require 'active_support/core_ext/module/delegation'
 
 module Models
-
   class Configuration
-
-    CONFIG_FILENAME = ".manifold-tools"
-    CONFIG_EXTNAME = ".yml"
+    CONFIG_FILENAME = '.manifold-tools'
+    CONFIG_EXTNAME = '.yml'
 
     def initialize
       @config = TTY::Config.new
@@ -34,7 +34,5 @@ module Models
     private
 
     attr_reader :config
-
   end
-
 end

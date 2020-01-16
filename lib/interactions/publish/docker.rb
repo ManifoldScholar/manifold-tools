@@ -1,13 +1,14 @@
-require "tty-command"
+# frozen_string_literal: true
+
+require 'tty-command'
 
 module Interactions
   module Publish
     class Docker < Base
-
       private
 
       def publish
-        say "Begin publishing..."
+        say 'Begin publishing...'
 
         publish_docker_images
       end
@@ -21,21 +22,21 @@ module Interactions
         image_names.each do |image|
           name = versioned_image(image, version)
 
-          puts "Checking if image exists..."
+          puts 'Checking if image exists...'
           exe = "docker pull #{name}  > /dev/null && echo \"present\" || echo \"absent\""
           out, err = cmd.run(exe)
-          if out.strip == "absent" || (!options[:no_overwrite] && !prompt.no?("Image already exists. Overwrite?"))
-            puts "Pushing image #{name}"
-            exe = "docker push #{name}"
-            out, err = cmd.run(exe)
-          end
+          next unless out.strip == 'absent' || (!options[:no_overwrite] && !prompt.no?('Image already exists. Overwrite?'))
+
+          puts "Pushing image #{name}"
+          exe = "docker push #{name}"
+          out, err = cmd.run(exe)
         end
       end
 
       def image_names
-        dirs = Pathname.new(File.join(project.path, "dockerfiles")).children.select { |c| c.directory? }
+        dirs = Pathname.new(File.join(project.path, 'dockerfiles')).children.select(&:directory?)
         images = dirs.map { |d| File.basename(d) }
-        images.rotate(images.find_index("manifold_api_base"))
+        images.rotate(images.find_index('manifold_api_base'))
       end
 
       def versioned_image(image, the_version = default_version)
@@ -49,7 +50,6 @@ module Interactions
       def project
         projects.manifold_docker
       end
-
     end
   end
 end

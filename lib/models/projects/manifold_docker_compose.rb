@@ -1,5 +1,8 @@
-module Models::Projects
-  class ManifoldDockerCompose < Base
+# frozen_string_literal: true
 
+module Models
+  module Projects
+    class ManifoldDockerCompose < Base
+    end
   end
 end

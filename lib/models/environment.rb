@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'attr_lazy'
 
 module Models
@@ -15,15 +17,15 @@ module Models
     end
 
     def manifest_url
-      "https://storage.googleapis.com/manifold-dist/manifest.json"
+      'https://storage.googleapis.com/manifold-dist/manifest.json'
     end
 
     def root_path
-      File.expand_path(File.join("__dir__", "../"))
+      File.expand_path(File.join('__dir__', '../'))
     end
 
     def repositories_path
-      File.join(root_path, "repositories")
+      File.join(root_path, 'repositories')
     end
 
     attr_lazy_reader :github do

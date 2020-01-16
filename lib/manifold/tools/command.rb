@@ -18,7 +18,8 @@ module Manifold
           Models::Notifier.success(msg) if msg
           return
         end
-        return Models::Notifier.error("ERROR: Invalid interaction outcome") unless outcome.respond_to? :result
+        return Models::Notifier.error('ERROR: Invalid interaction outcome') unless outcome.respond_to? :result
+
         Models::Notifier.error("ERROR: #{outcome.errors.full_messages}")
       end
 
@@ -41,7 +42,6 @@ module Manifold
         require 'tty-command'
         TTY::Command.new(options)
       end
-
     end
   end
 end

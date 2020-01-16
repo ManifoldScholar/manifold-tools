@@ -1,11 +1,11 @@
-require "active_interaction"
-require "pastel"
-require "tty-prompt"
+# frozen_string_literal: true
+
+require 'active_interaction'
+require 'pastel'
+require 'tty-prompt'
 
 module Interactions
-
   class BaseInteraction < ActiveInteraction::Base
-
     private
 
     def pastel
@@ -25,14 +25,7 @@ module Interactions
     end
 
     def print_message(msg)
-      badge = "[#{interaction_name.rjust(20)}] "
-      puts (interaction_badge + msg)
-    end
-
-    def print_table(table)
-      rows = table = table.split("\n")
-      mapped_rows = rows.map { |row| "#{interaction_badge}#{row}" }
-      print mapped_rows.join("\n") + "\n"
+      puts interaction_badge + msg
     end
 
     def print_without_interaction(msg)
@@ -53,13 +46,15 @@ module Interactions
 
     def say(msg, project = nil)
       return print_with_project(msg, project) if project
+
       print_message(msg)
     end
 
     def whisper(msg, project = nil)
       formatted = pastel.dim(msg)
-      return print_with_project(formatted , project) if project
-      print_message(formatted )
+      return print_with_project(formatted, project) if project
+
+      print_message(formatted)
     end
 
     def celebrate(msg)
@@ -68,8 +63,9 @@ module Interactions
 
     def warn(msg, project = nil)
       formatted = pastel.yellow(msg)
-      return print_with_project(formatted , project) if project
-      print_message(formatted )
+      return print_with_project(formatted, project) if project
+
+      print_message(formatted)
     end
 
     # The cursor movement
@@ -151,6 +147,5 @@ module Interactions
       require 'tty-which'
       TTY::Which.exist?(*args)
     end
-
   end
 end

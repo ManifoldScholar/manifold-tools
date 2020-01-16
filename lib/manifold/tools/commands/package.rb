@@ -15,7 +15,6 @@ module Manifold
           outcome = Interactions::Command::Package.run(environment: Models::Environment.new, options: @options, platform: @platform)
           report(outcome)
         end
-
       end
     end
   end

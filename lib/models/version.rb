@@ -1,5 +1,7 @@
-require "dux"
-require "semantic"
+# frozen_string_literal: true
+
+require 'dux'
+require 'semantic'
 
 module Models
   class Version
@@ -32,7 +34,7 @@ module Models
       @semantic.pre.present?
     end
 
-    alias_method :to_str, :to_s
+    alias to_str to_s
 
     private
 

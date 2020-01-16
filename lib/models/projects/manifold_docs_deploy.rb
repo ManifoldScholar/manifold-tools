@@ -1,15 +1,17 @@
-module Models::Projects
-  class ManifoldDocsDeploy < Base
+# frozen_string_literal: true
 
-    def cmd(printer = :pretty)
-      TTY::Command.new(printer: printer)
+module Models
+  module Projects
+    class ManifoldDocsDeploy < Base
+      def cmd(printer = :pretty)
+        TTY::Command.new(printer: printer)
+      end
+
+      def deploy
+        Dir.chdir(@path)  do
+          cmd.run('bundle exec cap production deploy')
+        end
+      end
     end
-
-    def deploy
-      Dir.chdir(@path){
-        cmd.run("bundle exec cap production deploy")
-      }
-    end
-
   end
 end

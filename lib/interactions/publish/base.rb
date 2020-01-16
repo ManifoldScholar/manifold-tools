@@ -1,11 +1,12 @@
-require "tty-command"
+# frozen_string_literal: true
+
+require 'tty-command'
 
 module Interactions
   module Publish
     class Base < Interactions::BaseInteraction
-
       object :environment, class: 'Models::Environment'
-      object :options, class: "Thor::CoreExt::HashWithIndifferentAccess"
+      object :options, class: 'Thor::CoreExt::HashWithIndifferentAccess'
       object :version, class: 'Models::Version'
       delegate :projects, to: :environment
 
@@ -18,8 +19,8 @@ module Interactions
 
       def check_packages
         if missing_packages?
-          warn "Some packages are missing: #{missing_packages.join(", ")}", project
-          return if prompt.no? "Are you sure you want to proceed?"
+          warn "Some packages are missing: #{missing_packages.join(', ')}", project
+          return if prompt.no? 'Are you sure you want to proceed?'
         else
           say "Found packages for #{version}", project
         end
@@ -40,7 +41,6 @@ module Interactions
       def interaction_key
         raise NotImplementedError
       end
-
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'jenkins_api_client'
 
 module Models
@@ -5,16 +7,16 @@ module Models
     include Models::Concerns::UsesEnvironment
 
     BUILD_MANIFOLD_JOB_TASK_NAME = 'omnibus-manifold'
-    BUILD_DOCS_JOB_TASK_NAME= 'documentation'
+    BUILD_DOCS_JOB_TASK_NAME = 'documentation'
 
     def build!(version, dry_run: false)
-      raise TypeError, "must be a version: #{version.inspect}" unless version.kind_of? Models::Version
+      raise TypeError, "must be a version: #{version.inspect}" unless version.is_a? Models::Version
 
       params = {
-        cause: "Triggered by manifold release",
+        cause: 'Triggered by manifold release',
         omnibusBuild: dry_run ? 'No' : 'Yes',
         tag: version.to_s,
-        token: build_token,
+        token: build_token
       }.stringify_keys
 
       client.job.build BUILD_MANIFOLD_JOB_TASK_NAME, params

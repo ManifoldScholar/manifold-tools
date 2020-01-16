@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Interactions
   module Project
-    class  OpenPr < BaseInteraction
+    class OpenPr < BaseInteraction
       object :environment, class: 'Models::Environment'
-      object :options, class: "Thor::CoreExt::HashWithIndifferentAccess"
-      object :project, class: "Models::Projects::Base"
+      object :options, class: 'Thor::CoreExt::HashWithIndifferentAccess'
+      object :project, class: 'Models::Projects::Base'
       object :version, class: 'Models::Version'
 
       delegate :projects, to: :environment
@@ -24,23 +26,21 @@ module Interactions
           end
         end
 
-        if msg == project.last_commit_message("origin/master")
-          warn "Looks like the staging branch has already been merged to master.", project
-          warn "Skipping opening a PR.", project
+        if msg == project.last_commit_message('origin/master')
+          warn 'Looks like the staging branch has already been merged to master.', project
+          warn 'Skipping opening a PR.', project
           return
         end
 
         compose(Git::Push, inputs.merge(project: project, branch: staging_branch))
         if project.open_pr_for_branch?(staging_branch)
           warn "PR already exists for #{msg}", project
-          warn "Not opening a new PR.", project
+          warn 'Not opening a new PR.', project
         else
           say "Opening a PR for #{msg}", project
           project.open_pull_request(msg)
         end
-
       end
-
     end
   end
 end

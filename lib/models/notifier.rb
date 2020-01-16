@@ -1,9 +1,9 @@
-require "pastel"
+# frozen_string_literal: true
+
+require 'pastel'
 
 module Models
-
   class Notifier
-
     def self.pastel
       @pastel ||= Pastel.new
     end
@@ -13,13 +13,11 @@ module Models
     end
 
     def self.error(msg)
-      puts self.pastel.red msg
+      puts pastel.red msg
     end
 
     def self.success(msg)
-      puts self.pastel.green msg
+      puts pastel.green msg
     end
-
   end
-
 end

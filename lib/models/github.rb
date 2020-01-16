@@ -1,4 +1,6 @@
-require "octokit"
+# frozen_string_literal: true
+
+require 'octokit'
 require 'faraday-http-cache'
 
 module Models
@@ -12,8 +14,8 @@ module Models
     end
 
     def closed_pull_requests(**options)
-      ap "Fetched closed pull requests from Github..."
-      iterate_over_pages!(client.pull_requests(env_fetch(:repo, :name), :state => 'closed'), options)
+      ap 'Fetched closed pull requests from Github...'
+      iterate_over_pages!(client.pull_requests(env_fetch(:repo, :name), state: 'closed'), options)
     end
 
     def pr_merged?(number, **options)
@@ -23,13 +25,11 @@ module Models
 
     private
 
-    def client
-      @client
-    end
+    attr_reader :client
 
     def initialize_client
       Octokit::Client.new(
-        :access_token => env_fetch(:github, :token)
+        access_token: env_fetch(:github, :token)
       )
     end
 
@@ -42,12 +42,11 @@ module Models
       Octokit.middleware = stack
     end
 
-
     def iterate_over_pages!(collection, limit: 100)
       last_response = client.last_response
       i = 0
-      while last_response.rels[:next] && i < limit do
-        i = i + 1
+      while last_response.rels[:next] && i < limit
+        i += 1
         data = last_response.rels[:next].get.data
         ap "Fetched objects [#{data.first.id}..#{data.last.id}]"
         last_response = last_response.rels[:next].get
@@ -55,6 +54,5 @@ module Models
       end
       collection
     end
-
   end
 end

@@ -6,7 +6,6 @@ module Manifold
   module Tools
     module Commands
       class Build < Manifold::Tools::Command
-
         def execute(input: $stdin, output: $stdout)
           outcome = Interactions::Command::Build.run(environment: Models::Environment.new, options: @options)
           report(outcome)

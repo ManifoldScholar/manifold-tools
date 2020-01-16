@@ -1,4 +1,6 @@
-require "manifold/tools/version"
+# frozen_string_literal: true
+
+require 'manifold/tools/version'
 
 module Manifold
   module Tools

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'attr_lazy'
 require 'git'
-require "tty-command"
+require 'tty-command'
 
 module Models
   module Projects
@@ -28,6 +30,7 @@ module Models
 
       def manifold_version_file_current_value
         return nil unless File.exist? manifold_version_file
+
         File.read manifold_version_file
       end
 
@@ -42,11 +45,11 @@ module Models
       attr_reader :options
 
       def current_tag
-        Dir.chdir(@path.to_s){
+        Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new(printer: :null)
           out, err = cmd.run("git describe --exact-match --tags $(git log -n1 --pretty='%h')")
           return !out.empty?
-        }
+        end
       end
 
       attr_lazy_reader :git do
@@ -62,27 +65,27 @@ module Models
       end
 
       attr_lazy_reader :versions do
-        get_versions
+        fetch_versions
       end
 
       def tag_date(tag)
-        return "" if tag === "unreleased"
-        Dir.chdir(@path.to_s){
-          result = %x[git rev-parse #{tag} | xargs git cat-file -p | egrep '^tagger' | cut -f2 -d '>']
+        return '' if tag == 'unreleased'
+
+        Dir.chdir(@path.to_s) do
+          result = `git rev-parse #{tag} | xargs git cat-file -p | egrep '^tagger' | cut -f2 -d '>'`
           unless result.blank?
-            timestamp, offset = result.split(" ")
+            timestamp, offset = result.split(' ')
             return Time.at(timestamp.to_i).to_datetime
           end
-          result = %x[git log -1 --format=%ai #{tag}]
-          unless result.blank?
-            return Date.parse(result)
-          end
+          result = `git log -1 --format=%ai #{tag}`
+          return Date.parse(result) unless result.blank?
+
           return null
-        }
+        end
       end
 
       def in_master_branch?
-        in_branch?("master")
+        in_branch?('master')
       end
 
       def in_branch?(branch)
@@ -97,94 +100,95 @@ module Models
         git.tag(version.to_s)
         true
       rescue ::Git::GitTagNameDoesNotExist
-        return false
+        false
       end
 
       def clone
         Dir.mkdir(@path) unless File.directory?(@path)
-        Git.clone("git@github.com:#{@repo}.git", ".", :path => @path)
+        Git.clone("git@github.com:#{@repo}.git", '.', path: @path)
       end
 
       def cloned?
-        return File.directory?(@path) && File.directory?(File.join(@path, ".git"))
+        File.directory?(@path) && File.directory?(File.join(@path, '.git'))
       end
 
       def working_tree_dirty?
-        Dir.chdir(@path.to_s){
+        Dir.chdir(@path.to_s)  do
           cmd = TTY::Command.new(printer: :null)
-          out, err = cmd.run("git status --porcelain")
+          out, err = cmd.run('git status --porcelain')
           return !out.empty?
-        }
+        end
       end
 
       def clean_build_branches
-        Dir.chdir(@path.to_s){
+        Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new
           result = cmd.run!("git branch |  sed 's/^* //' | grep \"build/\"")
           if result.out
-             branches = result.out.split(/\n+/)
-             branches.each do |branch|
-               cmd.run("git branch -D #{branch}")
-             end
+            branches = result.out.split(/\n+/)
+            branches.each do |branch|
+              cmd.run("git branch -D #{branch}")
+            end
           end
-        }
+        end
       end
 
       def branch?(branch)
-        Dir.chdir(@path.to_s){
+        Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new(printer: :null)
           out, err = cmd.run("git show-ref refs/heads/#{branch}")
           return out.present?
-        }
+        end
       rescue TTY::Command::ExitError
-        return false
+        false
       end
 
       def stash
-        Dir.chdir(@path.to_s){
+        Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new
-          out, err = cmd.run("git stash --include-untracked")
+          out, err = cmd.run('git stash --include-untracked')
           return !out.empty?
-        }
+        end
       end
 
       def prune_local_tags
-        Dir.chdir(@path.to_s){
+        Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new
-          out, err = cmd.run("git fetch --prune origin +refs/tags/*:refs/tags/*")
+          out, err = cmd.run('git fetch --prune origin +refs/tags/*:refs/tags/*')
           return !out.empty?
-        }
+        end
       end
 
       def hard_reset(branch)
-        Dir.chdir(@path.to_s){
+        Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new
           out, err = cmd.run("git reset --hard #{remotify_branch(branch)}")
           return !out.empty?
-        }
+        end
       end
 
       def last_commit_message(branch)
-        Dir.chdir(@path.to_s){
+        Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new
           out, err = cmd.run("git log -n 1 #{remotify_branch(branch)} --pretty=\"format:%s\"")
           return out
-        }
+        end
       rescue TTY::Command::ExitError
-        return nil
+        nil
       end
 
       def rebase(branch)
-        Dir.chdir(@path.to_s){
+        Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new
           out, err = cmd.run("git rebase #{remotify_branch(branch)}")
           return !out.empty?
-        }
+        end
       end
 
       def remotify_branch(branch)
-        return branch if branch.start_with? "origin"
-        return "origin/#{branch}"
+        return branch if branch.start_with? 'origin'
+
+        "origin/#{branch}"
       end
 
       def open_pr_for_branch?(branch)
@@ -192,51 +196,51 @@ module Models
       end
 
       def pr_url_for_branch(branch)
-        return open_prs[branch]
+        open_prs[branch]
       end
 
       def open_prs
-        Dir.chdir(@path.to_s){
+        Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new(printer: :null)
-          res, err = cmd.run("hub pr list -f \"%H|%U,\"")
-          prs = res.split(",")
+          res, err = cmd.run('hub pr list -f "%H|%U,"')
+          prs = res.split(',')
           out = {}
           prs.each do |pr|
-            branch, url = pr.split("|")
+            branch, url = pr.split('|')
             out[branch] = url
           end
           return out
-        }
+        end
       end
 
       def open_pull_request(message)
-        Dir.chdir(@path.to_s){
+        Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new
           out, err = cmd.run("hub pull-request -m \"#{message}\"")
           return !out.empty?
-        }
+        end
       end
 
       def describe(commit)
-        git.describe(commit, {:contains=> true})
+        git.describe(commit, contains: true)
       rescue Git::GitExecuteError
-        return nil
+        nil
       end
 
       def bundle_install
-        Dir.chdir(@path) {
-          return cmd(:quiet).run("bundle install")
-        }
+        Dir.chdir(@path) do
+          return cmd(:quiet).run('bundle install')
+        end
       end
 
       def gem_install_bundler(version)
-        Dir.chdir(@path) {
+        Dir.chdir(@path) do
           return cmd(:quiet).run("gem install bundler:#{version}")
-        }
+        end
       end
 
       def reload
-        @versions = get_versions
+        @versions = fetch_versions
       end
 
       def manifold_source_path
@@ -244,29 +248,20 @@ module Models
       end
 
       def rsync_manifold_src
-        raise "manifold_source_path not set" unless manifold_source_path
-        Dir.chdir(@path){
-          cmd = TTY::Command.new(printer: :pretty)
-          cmd.run("rsync -av --exclude '.git' --exclude 'client/node_modules' --progress --delete #{manifold_source_path}/ #{File.join(@path, "manifold-src")}")
-        }
-      end
+        raise 'manifold_source_path not set' unless manifold_source_path
 
-      def symlink_manifold_src
-        raise "manifold_source_path not set" unless manifold_source_path
-        unless File.exist?(File.join(@path, "manifold-src"))
-          Dir.chdir(@path){
-            cmd = TTY::Command.new(printer: :pretty)
-            cmd.run("ln -s #{manifold_source_path} manifold-src")
-          }
+        Dir.chdir(@path) do
+          cmd = TTY::Command.new(printer: :pretty)
+          cmd.run("rsync -av --exclude '.git' --exclude 'client/node_modules' --progress --delete #{manifold_source_path}/ #{File.join(@path, 'manifold-src')}")
         end
       end
 
       def count_commits_ahead(head, base)
-        Dir.chdir(@path){
+        Dir.chdir(@path) do
           cmd = TTY::Command.new(printer: :null)
           out, err = cmd.run("git rev-list --count #{base}..#{head}")
           return out.to_i
-        }
+        end
       end
 
       def count_commits_behind(head, base)
@@ -274,15 +269,15 @@ module Models
       end
 
       def amend_commit(message)
-        Dir.chdir(@path){
+        Dir.chdir(@path)  do
           cmd = TTY::Command.new(printer: :null)
           out, err = cmd.run("git commit --amend -m \"#{message}\"")
-        }
+        end
       end
 
       private
 
-      def get_versions
+      def fetch_versions
         git.tags.map(&:name).grep(/\Av/).map { |version| Models::Version.new version }.sort
       end
     end

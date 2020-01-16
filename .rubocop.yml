@@ -1,0 +1,32 @@
+AllCops:
+  TargetRubyVersion: 2.5
+  DisplayCopNames: true
+  Exclude:
+      - 'exe/**/*'
+      - 'bin/**/*'
+      - 'spec/**/*'
+      - 'repositories/**/*'
+      - 'lib/interactions/build/changelog.rb'
+      - 'manifold-tools.gemspec'
+Style/Documentation:
+  Enabled: false
+Lint/UselessAssignment:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Lint/UnusedMethodArgument:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Layout/LineLength:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Max: 10
+Metrics/ClassLength:
+  Enabled: false
+Metrics/BlockLength:
+  Enabled: false
+Security/MarshalLoad:
+  Enabled: false
