@@ -28,6 +28,10 @@ module Models
       "v#{@semantic}"
     end
 
+    def pre?
+      @semantic.pre.present?
+    end
+
     alias_method :to_str, :to_s
 
     private

@@ -170,6 +170,8 @@ module Models
           out, err = cmd.run("git log -n 1 #{remotify_branch(branch)} --pretty=\"format:%s\"")
           return out
         }
+      rescue TTY::Command::ExitError
+        return nil
       end
 
       def rebase(branch)
@@ -269,6 +271,13 @@ module Models
 
       def count_commits_behind(head, base)
         count_commits_ahead(base, head)
+      end
+
+      def amend_commit(message)
+        Dir.chdir(@path){
+          cmd = TTY::Command.new(printer: :null)
+          out, err = cmd.run("git commit --amend -m \"#{message}\"")
+        }
       end
 
       private

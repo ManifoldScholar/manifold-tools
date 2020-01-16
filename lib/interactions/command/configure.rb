@@ -24,6 +24,9 @@ module Interactions
         docker_compose_repo_name = prompt.ask("What is the name of the Manifold Docker-Compose repo?", default: config.fetch(:docker_compose, :name) || "ManifoldScholar/manifold-docker-compose")
         config.set(:docker_compose, :name, value: docker_compose_repo_name )
 
+        docs_deploy_repo = prompt.ask("What is the name of the Manifold Documentation Deploy repo?", default: config.fetch(:docs_deploy, :name) || "ManifoldScholar/manifold-docs-deploy")
+        config.set(:docs_deploy, :name, value: docs_deploy_repo )
+
         github_access_token = prompt.ask("Enter the Github OAuth access token", default: config.fetch(:github, :token))
         config.set(:github, :token, value: github_access_token )
 

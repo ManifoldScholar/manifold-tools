@@ -4,6 +4,10 @@ module Models::Projects
       path.join "_data/releases.json"
     end
 
+    attr_lazy_reader :current_file do
+      path.join "_data/current.json"
+    end
+
     def manifest_file_relative_path
       manifest_file.relative_path_from(path).to_s
     end

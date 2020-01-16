@@ -16,13 +16,17 @@ module Interactions
         msg = "[F] Release #{version}"
 
         if dirty
-          say "Committing with message: #{msg}"
-          compose(Git::Commit, inputs.merge(project: project, message: msg)) if dirty
+          say "Committing with message: #{msg}", project
+          if msg == project.last_commit_message(staging_branch)
+            compose(Git::Commit, inputs.merge(project: project, message: msg, amend: true))
+          else
+            compose(Git::Commit, inputs.merge(project: project, message: msg))
+          end
         end
 
         if msg == project.last_commit_message("origin/master")
-          warn "Looks like the staging branch has already been merged to master."
-          warn "Skipping opening a PR."
+          warn "Looks like the staging branch has already been merged to master.", project
+          warn "Skipping opening a PR.", project
           return
         end
 

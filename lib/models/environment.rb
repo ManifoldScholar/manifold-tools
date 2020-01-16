@@ -14,6 +14,10 @@ module Models
       @env
     end
 
+    def manifest_url
+      "https://storage.googleapis.com/manifold-dist/manifest.json"
+    end
+
     def root_path
       File.expand_path(File.join("__dir__", "../"))
     end

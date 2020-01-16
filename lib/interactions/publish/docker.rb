@@ -24,7 +24,7 @@ module Interactions
           puts "Checking if image exists..."
           exe = "docker pull #{name}  > /dev/null && echo \"present\" || echo \"absent\""
           out, err = cmd.run(exe)
-          if out == "absent" || (!options[:no_overwrite] && !prompt.no?("Image already exists. Overwrite?"))
+          if out.strip == "absent" || (!options[:no_overwrite] && !prompt.no?("Image already exists. Overwrite?"))
             puts "Pushing image #{name}"
             exe = "docker push #{name}"
             out, err = cmd.run(exe)

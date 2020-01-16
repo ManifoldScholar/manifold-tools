@@ -45,6 +45,7 @@ module Manifold
                            desc: 'Display usage information'
       method_option :skip_checks, type: :boolean, default: false, desc: "If true, manifold-tools will not check for missing packages."
       method_option :no_overwrite, type: :boolean, default: false, desc: "If true, existing packages will not be overwritten."
+      method_option :regenerate_manifest, type: :boolean, default: false, desc: "If true, the omnibus package manifest will always be regenerated"
       def publish(version)
         if options[:help]
           invoke :help, ['publish']

@@ -31,9 +31,9 @@ module Interactions
         say "Preparing repository for build", project
         say "Base branch for release is #{release_branch}", project
         say "Staging branch is #{staging_branch}", project
-        say "Staging branch #{staging_branch_exists ? "exists" : "does not exist"}.", project
-        say "Current branch is #{in_staging_branch ? "" : "not" }staging branch.", project
-        say "Current branch is #{dirty ? "" : "not" } dirty.", project
+        say "Staging branch #{staging_branch_exists ? "exists " : "does not exist"}.", project
+        say "Current branch is #{in_staging_branch ? "" : "not " }staging branch.", project
+        say "Current branch is #{dirty ? "" : "not " } dirty.", project
 
         # Give the option to stash if dirty
         prompt_stash if dirty unless in_staging_branch

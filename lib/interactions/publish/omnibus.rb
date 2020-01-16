@@ -10,7 +10,7 @@ module Interactions
         say "Begin publishing..."
 
         storage_changed = publish_to_google_cloud_storage
-        publish_packages_manifest if storage_changed
+        publish_packages_manifest if storage_changed || options["regenerate_manifest"]
       end
 
       def publish_to_google_cloud_storage
@@ -84,7 +84,7 @@ module Interactions
                 "platform" => metadata["platform"],
                 "platform_version" => metadata["platform_version"],
                 "arch" => metadata["arch"],
-                "url" => file.url
+                "url" => file.url.sub(".metadata.json", "")
             }
             manifest[path][metadata["version"]] = details
           end
