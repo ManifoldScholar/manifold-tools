@@ -159,16 +159,51 @@ module Models
       def hard_reset(branch)
         Dir.chdir(@path.to_s){
           cmd = TTY::Command.new
-          out, err = cmd.run("git reset --hard origin/#{branch}")
+          out, err = cmd.run("git reset --hard #{remotify_branch(branch)}")
           return !out.empty?
         }
       end
 
-      def pr_exists?(message)
+      def last_commit_message(branch)
+        Dir.chdir(@path.to_s){
+          cmd = TTY::Command.new
+          out, err = cmd.run("git log -n 1 #{remotify_branch(branch)} --pretty=\"format:%s\"")
+          return out
+        }
+      end
+
+      def rebase(branch)
+        Dir.chdir(@path.to_s){
+          cmd = TTY::Command.new
+          out, err = cmd.run("git rebase #{remotify_branch(branch)}")
+          return !out.empty?
+        }
+      end
+
+      def remotify_branch(branch)
+        return branch if branch.start_with? "origin"
+        return "origin/#{branch}"
+      end
+
+      def open_pr_for_branch?(branch)
+        open_prs.key?(branch)
+      end
+
+      def pr_url_for_branch(branch)
+        return open_prs[branch]
+      end
+
+      def open_prs
         Dir.chdir(@path.to_s){
           cmd = TTY::Command.new(printer: :null)
-          out, err = cmd.run("hub pr list")
-          return out.include?(message)
+          res, err = cmd.run("hub pr list -f \"%H|%U,\"")
+          prs = res.split(",")
+          out = {}
+          prs.each do |pr|
+            branch, url = pr.split("|")
+            out[branch] = url
+          end
+          return out
         }
       end
 
@@ -218,9 +253,22 @@ module Models
         raise "manifold_source_path not set" unless manifold_source_path
         unless File.exist?(File.join(@path, "manifold-src"))
           Dir.chdir(@path){
+            cmd = TTY::Command.new(printer: :pretty)
             cmd.run("ln -s #{manifold_source_path} manifold-src")
           }
         end
+      end
+
+      def count_commits_ahead(head, base)
+        Dir.chdir(@path){
+          cmd = TTY::Command.new(printer: :null)
+          out, err = cmd.run("git rev-list --count #{base}..#{head}")
+          return out.to_i
+        }
+      end
+
+      def count_commits_behind(head, base)
+        count_commits_ahead(base, head)
       end
 
       private

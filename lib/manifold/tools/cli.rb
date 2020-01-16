@@ -40,7 +40,6 @@ module Manifold
         end
       end
 
-
       desc 'publish VERSION', 'Commits changes and tags repositories. Pushes repos, uploads packages, and published docs.'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
@@ -55,7 +54,6 @@ module Manifold
         end
       end
 
-      method_option :development, type: :boolean, default: false, desc: "If true, checks will be a little bit more lax"
       desc 'package PLATFORM', 'Create all operating system packages'
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
@@ -73,7 +71,6 @@ module Manifold
       method_option :version, type: :string, desc: "The version that you will build. If a tag exists, it will be checked out. If not, repositories will be tagged."
       method_option :branch, type: :string, default: "master", desc: "If you're not building an existing tag, the release will be built from this branch"
       method_option :no_overwrite, type: :boolean, default: false, desc: "If true, existing packages will not be overwritten."
-      method_option :development, type: :boolean, default: false, desc: "If true, build will not complain if the repositories are dirty."
       def build(*)
         if options[:help]
           invoke :help, ['build']

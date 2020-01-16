@@ -14,9 +14,14 @@ module Interactions
           whisper "...skipping push due to --noop or --no-push flag", project
         end
       rescue ::Git::GitExecuteError => e
-        errors.add("git:push", e)
+        say "Hmmm... something went wrong", project
+        warn e, project
+        if prompt.yes?("Would you like to try again with --force?")
+          project.git.push('origin', branch, tags: true, force: true)
+        else
+          errors.add("git:push", e)
+        end
       end
-
 
     end
   end

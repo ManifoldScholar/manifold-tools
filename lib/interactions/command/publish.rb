@@ -13,30 +13,66 @@ module Interactions
       attr_reader :version
 
       def execute
+
         celebrate "Let's publish #{version}"
         version = Models::Version.new projects.manifold_source.manifold_version_file_current_value
+        staging_branch = "build/#{version}"
+
+        # Move each repo into the correct state.
+        projects.each do |project|
+          compose(Interactions::Project::Prepare, inputs.merge(project: project, version: version))
+        end
 
         # Publish the packages and docker images
         compose(Interactions::Publish::Omnibus, inputs.merge(version: version))
         compose(Interactions::Publish::Docker, inputs.merge(version: version))
+        compose(Interactions::Publish::Documentation, inputs.merge(version: version))
+
+        # TODO: Build and deploy documentation
+        Raise "You need to make documentation deploy work."
 
         # Open PRs for the various projects
         projects.each do |project|
-          tag = version.to_s
-          staging_branch = "build/#{version}"
-          in_staging_branch = project.in_branch?(staging_branch)
-          dirty = project.working_tree_dirty?
-          msg = "[F] Release #{version}"
-          raise "Not in staging branch" unless in_staging_branch
-          compose(Git::Commit, inputs.merge(project: project, message: msg)) if dirty
-          compose(Git::Push, inputs.merge(project: project, branch: staging_branch))
-          if project.pr_exists?(msg)
-            warn "PR already exists for #{msg}"
-            warn "Not opening a new PR."
-          else
-            project.open_pull_request(msg)
-          end
+          compose(Interactions::Project::OpenPr, inputs.merge(project: project, version: version))
         end
+
+        # Approve PRS
+        urls = []
+        say "Looking for open PRs"
+        projects.each do |project|
+          url = project.pr_url_for_branch(staging_branch)
+          urls << url unless url.blank?
+        end
+
+        if urls.count.positive?
+          say "Ok, time to approve some PRs"
+          urls.each do |url|
+            warn url
+          end
+          say "Go and accept all of those pull requests"
+          say "Be sure to rebase the PR on master rather than merge it."
+          prompt.keypress("When you've accepted all the PRs, press any key to continue")
+        end
+
+        say "Great, the repos are all good to go. Time to tag this release."
+        return unless prompt.yes? "Ready to tag?"
+
+        # Tag repositories
+        projects.each do |project|
+          if project.tagged?(version)
+            warn "This project has already been tagged at #{version}", project
+            warn "Skipping. You'll have to manually fix this."
+            next
+          end
+          say "Returning to master", project
+          project.git.branch("master").checkout()
+          compose(Git::Fetch, inputs.merge(project: project))
+          project.hard_reset("origin/master")
+          compose(Git::Tag, inputs.merge(project: project, version: version))
+          compose(Git::Push, inputs.merge(project: project, branch: "master"))
+        end
+
+
 
       end
 
