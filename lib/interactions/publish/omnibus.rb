@@ -104,7 +104,8 @@ module Interactions
         config = environment.fetch(:google_storage)
         storage = Google::Cloud::Storage.new(
           project_id: environment.fetch(:google_storage, :project_id),
-          credentials: environment.fetch(:google_storage, :credentials)
+          credentials: environment.fetch(:google_storage, :credentials),
+          timeout: 1200
         )
       end
 

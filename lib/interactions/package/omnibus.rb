@@ -25,6 +25,9 @@ module Interactions
         manifold_omnibus.machine_up("#{platform}-builder")
         manifold_omnibus.build(platform)
         manifold_omnibus.machine_down("#{platform}-builder")
+      rescue => error
+        manifold_omnibus.machine_down("#{platform}-builder")
+        raise error
       end
 
       def prepare

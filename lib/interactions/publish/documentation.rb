@@ -26,7 +26,7 @@ module Interactions
           say "This is a pre-release version, so we're not updating the current version docs."
         else
           say 'This appears to not be a pre-release version. Updating documentation current version'
-          current = { 'version' => verison.to_s, 'os' => 'ubuntu18' }
+          current = { 'version' => version.to_s, 'os' => 'ubuntu18' }
           current_manifest = JSON.pretty_generate(current)
           manifold_docs.current_file.write current_manifest
         end

@@ -108,7 +108,10 @@ module Interactions
           return true
         end
         say 'Ensuring that all repository versions are equal...'
-        versions = projects.map(&:manifold_version_file_current_value)
+        versions = []
+        projects.each do |p|
+          versions << p.manifold_version_file_current_value
+        end
         match = versions.uniq.count == 1
         say "All repositories at #{versions.first}." if match
         match

@@ -38,8 +38,8 @@ module Models
       end
 
       def generate_package_filename(platform, version)
-        return "manifold_#{version.to_semantic_string.gsub!('-', '~')}-1_amd64.deb" if platform.start_with?('ubuntu')
-        return "manifold-#{version.to_semantic_string.gsub!('-', '~')}-1.el7.x86_64.rpm" if platform.start_with?('centos')
+        return "manifold_#{version.to_semantic_string.gsub('-', '~')}-1_amd64.deb" if platform.start_with?('ubuntu')
+        return "manifold-#{version.to_semantic_string.gsub('-', '~')}-1.el7.x86_64.rpm" if platform.start_with?('centos')
 
         raise "Not implemented in generate_package_filename for #{platform}"
       end
