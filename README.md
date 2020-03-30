@@ -1,6 +1,6 @@
 # Manifold::Tools
 
-The main purpose of this CLI application is to automate the process of releasing a new 
+The main purpose of this CLI application is to automate the process of releasing a new
 version of Manifold. We're not currently releasing it to a gem repository, although we
 may in the future.
 
@@ -24,8 +24,8 @@ Or install it yourself as:
 
 The main interface for this tool is at ./exe/manifold-tools.
 
-To get started, run `manifold-tools configure`. You'll be prompted with a series of 
-questions and configuration will be generated and stored in ~/.manifold-tools.yml. 
+To get started, run `manifold-tools configure`. You'll be prompted with a series of
+questions and configuration will be generated and stored in ~/.manifold-tools.yml.
 
 After configuring the application, there are two primary commands that are used to release
 a new version of manifold. First you build the version, then you publish the version.
@@ -87,14 +87,9 @@ Publishing will perform the following tasks:
 - Open pull requests for each repository with a release commit
 - Prompt the user to accept all pull requests
 - Deploy documentation to production
-- Tag all releveant repositories
-
-
-
+- Tag all relevant repositories
 
 ## Development
-
-
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
