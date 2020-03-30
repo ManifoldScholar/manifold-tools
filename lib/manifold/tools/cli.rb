@@ -44,6 +44,7 @@ module Manifold
       method_option :help, aliases: '-h', type: :boolean,
                            desc: 'Display usage information'
       method_option :skip_checks, type: :boolean, default: false, desc: 'If true, manifold-tools will not check for missing packages.'
+      method_option :branch, type: :string, default: 'master', desc: "If you're not building an existing tag, the release will be built from this branch"
       method_option :no_overwrite, type: :boolean, default: false, desc: 'If true, existing packages will not be overwritten.'
       method_option :regenerate_manifest, type: :boolean, default: false, desc: 'If true, the omnibus package manifest will always be regenerated'
       def publish(version)
@@ -67,17 +68,16 @@ module Manifold
         end
       end
 
-      desc 'build', 'Build Manifold and create Docker images and OS packages'
+      desc 'build VERSION', 'Build Manifold and create Docker images and OS packages'
       method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
-      method_option :version, type: :string, desc: 'The version that you will build. If a tag exists, it will be checked out. If not, repositories will be tagged.'
       method_option :branch, type: :string, default: 'master', desc: "If you're not building an existing tag, the release will be built from this branch"
       method_option :no_overwrite, type: :boolean, default: false, desc: 'If true, existing packages will not be overwritten.'
-      def build(*)
+      def build(version)
         if options[:help]
           invoke :help, ['build']
         else
           require_relative 'commands/build'
-          Manifold::Tools::Commands::Build.new(options).execute
+          Manifold::Tools::Commands::Build.new(version, options).execute
         end
       end
 

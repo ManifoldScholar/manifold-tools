@@ -30,7 +30,7 @@ module Interactions
       end
 
       def previous_versions
-        @previous_versions ||= projects.map(&:manifold_version_file_current_value)
+        @previous_versions ||= projects.map { |p| Version.new(p.manifold_version_file_current_value) } 
       end
 
       def highest_previous_version
