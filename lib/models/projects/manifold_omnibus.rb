@@ -66,7 +66,7 @@ module Models
 
       def machine_down(machine)
         Dir.chdir(@path) do
-          return cmd(:quiet).run("vagrant suspend #{machine}")
+          return cmd(:quiet).run("vagrant halt #{machine}")
         end
       end
 

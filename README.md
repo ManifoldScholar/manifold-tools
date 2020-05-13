@@ -70,7 +70,7 @@ Building will perform the following tasks:
 Publish Manifold with the following command. Update the version to whatever version you want
 to publish:
 ```
-./exe/manifold-tools build v5.0.0
+./exe/manifold-tools publish v5.0.0
 ```
 
 Publishing will perform the following tasks:
