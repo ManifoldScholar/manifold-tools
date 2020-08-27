@@ -17,8 +17,9 @@ module Interactions
 
       def build
         say 'Rsyncing Manifold source into manifold-docker directory'
+        with_overwrite = prompt.yes?("If images exist, do you want to rebuild and replace them?")
         manifold_docker.rsync_manifold_src
-        manifold_docker.build(options[:no_overwrite])
+        manifold_docker.build(overwrite: with_overwrite, interactive: false)
       end
 
       def prepare
