@@ -271,7 +271,7 @@ module Models
       def amend_commit(message)
         Dir.chdir(@path)  do
           cmd = TTY::Command.new(printer: :null)
-          out, err = cmd.run("git commit --amend -m \"#{message}\"")
+          out, err = cmd.run("git commit --amend --allow-empty -m \"#{message}\"")
         end
       end
 
