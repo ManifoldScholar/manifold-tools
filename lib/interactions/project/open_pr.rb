@@ -38,9 +38,16 @@ module Interactions
           warn 'Not opening a new PR.', project
         else
           say "Opening a PR for #{msg}", project
-          project.open_pull_request(msg)
+          project.open_pull_request(msg, base: release_branch_for(project))
         end
       end
+
+      private
+
+      def release_branch_for(project)
+        project.name == manifold_source.name ? options[:branch] || 'master' : 'master'
+      end
+
     end
   end
 end

@@ -213,10 +213,10 @@ module Models
         end
       end
 
-      def open_pull_request(message)
+      def open_pull_request(message, base: "master")
         Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new
-          out, err = cmd.run("hub pull-request -m \"#{message}\"")
+          out, err = cmd.run("hub pull-request -m \"#{message}\" -b #{base}")
           return !out.empty?
         end
       end
