@@ -8,7 +8,7 @@ require 'active_support/core_ext'
 
 loader = Zeitwerk::Loader.for_gem
 loader.ignore("#{__dir__}/version.rb")
-loader.push_dir("#{__dir__}/../..")
+loader.push_dir("#{File.expand_path("../..", __dir__)}")
 loader.setup
 
 module Manifold
