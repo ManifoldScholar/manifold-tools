@@ -8,9 +8,7 @@ module Models
       end
 
       def deploy
-        Dir.chdir(@path)  do
-          cmd.run('bundle exec cap production deploy')
-        end
+        project_ruby_command "bundle", "exec", "cap", "production", "deploy"
       end
     end
   end

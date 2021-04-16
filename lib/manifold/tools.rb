@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'manifold/tools/version'
+require 'open3'
 
 module Manifold
   module Tools

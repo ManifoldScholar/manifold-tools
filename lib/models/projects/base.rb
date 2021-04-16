@@ -275,6 +275,33 @@ module Models
         end
       end
 
+      def project_ruby_command(*args, in_directory: @path)
+        out, err, status = Open3.capture3(project_ruby_env, *args, chdir: in_directory)
+
+        unless status.success?
+          warn err
+
+          raise "Failed to run #{args * " "}"
+        end
+
+        out
+      end
+
+      def project_ruby_env
+        {}.tap do |h|
+          h["BUNDLE_GEMFILE"] = project_gemfile
+          h["RBENV_VERSION"] = project_ruby_version
+        end
+      end
+
+      def project_gemfile
+        @project_gemfile ||= File.join(@path, "Gemfile")
+      end
+
+      def project_ruby_version
+        @project_ruby_version ||= File.join(@path, ".ruby-version").read rescue RUBY_VERSION
+      end
+
       private
 
       def fetch_versions

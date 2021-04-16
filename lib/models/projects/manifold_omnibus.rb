@@ -7,13 +7,6 @@ module Models
         TTY::Command.new(printer: printer)
       end
 
-      def all_packages
-        Dir.chdir(@path) do
-          out, err = cmd.run('bundle exec rake packages:list')
-          return JSON.parse(out)
-        end
-      end
-
       def pkg_dir_path
         File.join(@path, 'pkg')
       end
@@ -52,41 +45,39 @@ module Models
       end
 
       def valid_platforms
-        Dir.chdir(@path) do
-          out, err = cmd.run('bundle exec rake introspection:platforms')
-          return JSON.parse(out).reject { |p| p == 'macos' }
-        end
+        rake_cmd("introspection:platforms").reject { |p| p == "macos" }
       end
 
       def machine_up(machine)
-        Dir.chdir(@path) do
-          return cmd(:quiet).run("vagrant up #{machine}")
-        end
+        return cmd(:quiet).run("vagrant up #{machine}", chdir: @path)
       end
 
       def machine_down(machine)
-        Dir.chdir(@path) do
-          return cmd(:quiet).run("vagrant halt #{machine}")
-        end
+        return cmd(:quiet).run("vagrant halt #{machine}", chdir: @path)
       end
 
       def build(platform)
-        Dir.chdir(@path) do
-          cmd(:quiet).run("bundle exec rake build:#{platform}")
-        end
+        rake_cmd "build:#{platform}", printer: :quiet
       end
 
       def install(platform, version)
-        Dir.chdir(@path) do
-          package_file = generate_package_filename(platform, version)
-          cmd(:quiet).run("bundle exec rake install:#{platform}[#{package_file}]")
-        end
+        package_file = generate_package_filename(platform, version)
+
+        rake_cmd("install:#{platform}[#{package_file}]", printer: :quiet)
       end
 
       def missing_packages(version)
         valid_platforms.reject do |platform|
           package_exists? platform, version
         end
+      end
+
+      def all_packages
+        rake_cmd "packages:list"
+      end
+
+      def rake_cmd(*args, printer: :null, output_json: true)
+        JSON.parse project_ruby_command("bin/rake", *args)
       end
     end
   end
