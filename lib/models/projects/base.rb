@@ -3,6 +3,7 @@
 require 'attr_lazy'
 require 'git'
 require 'tty-command'
+require 'pastel'
 
 module Models
   module Projects
@@ -276,7 +277,21 @@ module Models
       end
 
       def project_ruby_command(*args, in_directory: @path)
-        out, err, status = Open3.capture3(project_ruby_env, *args, chdir: in_directory)
+        # out, err, status = Open3.capture3(project_ruby_env, *args, chdir: in_directory)
+        status = nil
+        data = {:out => [], :err => []}
+        Open3.popen3(project_ruby_env, *args, chdir: in_directory) do |stdin, stdout, stderr, thread|
+          { :out => stdout, :err => stderr }.each do |key, stream|
+            Thread.new do
+              until (raw_line = stream.gets).nil? do
+                data[key].push raw_line
+                print_message raw_line
+              end
+            end
+          end
+          status = thread.value # Process::Status object returned.
+          thread.join # don't exit until the external process is done
+        end
 
         unless status.success?
           warn err
@@ -284,7 +299,8 @@ module Models
           raise "Failed to run #{args * " "}"
         end
 
-        out
+        data[:out].join("\n")
+
       end
 
       def project_ruby_env
@@ -303,6 +319,22 @@ module Models
       end
 
       private
+
+      def pastel
+        @pastel ||= Pastel.new
+      end
+
+      def interaction_name
+        @interaction_name ||= self.class.name.split('::').last
+      end
+
+      def interaction_badge
+        pastel.dim("[#{interaction_name.rjust(13)}] ")
+      end
+
+      def print_message(msg)
+        puts interaction_badge + msg
+      end
 
       def fetch_versions
         git.tags.map(&:name).grep(/\Av/).map { |version| Models::Version.new version }.sort
