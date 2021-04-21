@@ -7,13 +7,14 @@ module Manifold
     module Commands
       class Build < Manifold::Tools::Command
 
-        def initialize(version, options)
+        def initialize(version, platform = "all", options)
           @version = version
+          @platform = platform
           @options = options
         end
 
         def execute(input: $stdin, output: $stdout)
-          outcome = Interactions::Command::Build.run(environment: Models::Environment.new, version: @version, options: @options)
+          outcome = Interactions::Command::Build.run(environment: Models::Environment.new, version: @version, platform: @platform, options: @options)
           report(outcome)
         end
       end
