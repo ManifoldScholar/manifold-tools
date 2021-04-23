@@ -68,7 +68,7 @@ module Manifold
         end
       end
 
-      desc 'build VERSION PLATFORM', 'Build Manifold and create Docker images and OS packages'
+      desc 'build VERSION [PLATFORM]', 'Build Manifold and create Docker images and OS packages'
       method_option :help, aliases: '-h', type: :boolean, desc: 'Display usage information'
       method_option :branch, type: :string, default: 'master', desc: "If you're not building an existing tag, the release will be built from this branch"
       method_option :no_overwrite, type: :boolean, default: false, desc: 'If true, existing packages will not be overwritten.'
