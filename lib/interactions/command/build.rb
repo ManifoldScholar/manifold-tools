@@ -28,7 +28,7 @@ module Interactions
         compose(Interactions::Package::Omnibus, inputs.merge(platform: 'ubuntu18', version: sem_version, with_confirmation: false, skip_prepare: true)) if ubuntu18?
         compose(Interactions::Package::Omnibus, inputs.merge(platform: 'ubuntu20', version: sem_version, with_confirmation: false, skip_prepare: true)) if ubuntu20?
         compose(Interactions::Package::Omnibus, inputs.merge(platform: 'centos7', version: sem_version, with_confirmation: false, skip_prepare: true)) if centos7?
-        compose(Interactions::Package::Omnibus, inputs.merge(platform: 'centos8', version: sem_version, with_confirmation: false, skip_prepare: true)) if centos7?
+        compose(Interactions::Package::Omnibus, inputs.merge(platform: 'centos8', version: sem_version, with_confirmation: false, skip_prepare: true)) if centos8?
         compose(Interactions::Package::Docker, inputs.merge(version: sem_version, with_confirmation: false)) if docker?
 
         say 'Build complete'
