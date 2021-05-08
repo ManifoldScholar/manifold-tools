@@ -77,7 +77,11 @@ module Models
       end
 
       def rake_cmd(*args, printer: :null, output_json: true)
-        JSON.parse project_ruby_command("bin/rake", *args)
+        res = project_ruby_command("bin/rake", *args)
+        return JSON.parse res if output_json
+        res
+      rescue JSON::ParserError
+        res
       end
     end
   end
