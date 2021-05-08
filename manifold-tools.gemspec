@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'active_interaction'
+  spec.add_dependency 'active_interaction', '~> 3.0'
   spec.add_dependency 'activesupport'
   spec.add_dependency 'attr_lazy'
   spec.add_dependency 'awesome_print'
