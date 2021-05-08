@@ -410,7 +410,7 @@ GEM
     public_suffix (4.0.6)
     racc (1.5.2)
     rainbow (3.0.0)
-    rake (10.5.0)
+    rake (13.0.3)
     rbtree (0.4.4)
     rchardet (1.8.0)
     regexp_parser (2.1.1)
@@ -547,7 +547,7 @@ DEPENDENCIES
   bundler (~> 1.17)
   manifold-tools!
   pry (~> 0.12.2)
-  rake (~> 10.0)
+  rake (~> 13.0)
   rspec (~> 3.0)
 
 BUNDLED WITH
