@@ -73,7 +73,8 @@ GEM
     concurrent-ruby (1.1.8)
     declarative (0.0.20)
     diff-lcs (1.4.4)
-    digest-crc (0.6.0)
+    digest-crc (0.6.3)
+      rake (>= 12.0.0, < 14.0.0)
     dotenv (2.7.6)
     dux (0.8.0)
       yard_types
