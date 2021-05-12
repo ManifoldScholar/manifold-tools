@@ -24,7 +24,6 @@ module Interactions
         projects.manifold_omnibus.gem_install_bundler('1.17.2')
         projects.manifold_omnibus.bundle_install
 
-        compose(Interactions::Package::Omnibus, inputs.merge(platform: 'ubuntu16', version: sem_version, with_confirmation: false, skip_prepare: true)) if ubuntu16?
         compose(Interactions::Package::Omnibus, inputs.merge(platform: 'ubuntu18', version: sem_version, with_confirmation: false, skip_prepare: true)) if ubuntu18?
         compose(Interactions::Package::Omnibus, inputs.merge(platform: 'ubuntu20', version: sem_version, with_confirmation: false, skip_prepare: true)) if ubuntu20?
         compose(Interactions::Package::Omnibus, inputs.merge(platform: 'centos7', version: sem_version, with_confirmation: false, skip_prepare: true)) if centos7?
@@ -35,11 +34,7 @@ module Interactions
       end
 
       private
-
-      def ubuntu16?
-        all_platforms? || platform == "ubuntu16"
-      end
-
+      ``
       def ubuntu18?
         all_platforms? || platform == "ubuntu18"
       end

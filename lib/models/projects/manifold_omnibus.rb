@@ -49,11 +49,11 @@ module Models
       end
 
       def machine_up(machine)
-        return cmd(:quiet).run("vagrant up #{machine}", chdir: @path)
+        project_ruby_command("vagrant up #{machine}")
       end
 
       def machine_down(machine)
-        return cmd(:quiet).run("vagrant halt #{machine}", chdir: @path)
+        project_ruby_command("vagrant halt #{machine}")
       end
 
       def build(platform)
