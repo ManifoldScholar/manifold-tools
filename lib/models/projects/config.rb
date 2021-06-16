@@ -11,7 +11,6 @@ module Models
 
         @projects = {}.with_indifferent_access
         @projects[:manifold_docs] = Models::Projects::ManifoldDocs.new manifold_docs_path, manifold_docs_repo
-        @projects[:manifold_docs_deploy] = Models::Projects::ManifoldDocsDeploy.new manifold_docs_deploy_path, manifold_docs_deploy_repo
         @projects[:manifold_source] = Models::Projects::ManifoldSource.new manifold_source_path, manifold_source_repo
         @projects[:manifold_omnibus] = Models::Projects::ManifoldOmnibus.new manifold_omnibus_path, manifold_omnibus_repo, manifold_source_path: manifold_source_path
         @projects[:manifold_docker] = Models::Projects::ManifoldDocker.new manifold_docker_path, manifold_docker_repo, manifold_source_path: manifold_source_path
@@ -26,10 +25,6 @@ module Models
         end
 
         self
-      end
-
-      def manifold_docs_deploy
-        @projects.fetch __method__
       end
 
       def manifold_docs
@@ -56,10 +51,6 @@ module Models
         File.join(env.repositories_path, 'manifold-docs')
       end
 
-      attr_lazy_reader :manifold_docs_deploy_path do
-        File.join(env.repositories_path, 'manifold-docs-deploy')
-      end
-
       attr_lazy_reader :manifold_omnibus_path do
         File.join(env.repositories_path, 'manifold-omnibus')
       end
@@ -78,10 +69,6 @@ module Models
 
       attr_lazy_reader :manifold_docs_repo do
         env_fetch(:docs, :name)
-      end
-
-      attr_lazy_reader :manifold_docs_deploy_repo do
-        env_fetch(:docs_deploy, :name)
       end
 
       attr_lazy_reader :manifold_docker_repo do
