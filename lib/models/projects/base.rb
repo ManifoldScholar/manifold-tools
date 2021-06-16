@@ -121,6 +121,13 @@ module Models
         end
       end
 
+      def working_tree_status
+        Dir.chdir(@path.to_s)  do
+          cmd = TTY::Command.new
+          out, err = cmd.run('git status')
+        end
+      end
+
       def clean_build_branches
         Dir.chdir(@path.to_s) do
           cmd = TTY::Command.new

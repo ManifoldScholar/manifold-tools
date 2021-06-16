@@ -34,7 +34,7 @@ module Interactions
       end
 
       private
-      ``
+
       def ubuntu18?
         all_platforms? || platform == "ubuntu18"
       end

@@ -95,6 +95,7 @@ module Interactions
       end
 
       def prompt_stash
+        project.working_tree_status
         compose Interactions::Git::Stash, inputs if prompt.yes?(format(PROMPT_STASH, project.name))
       end
 
