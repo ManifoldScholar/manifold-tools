@@ -16,27 +16,30 @@ module Interactions
       attr_reader :version
 
       def execute
+
         # Define the version and branch
         celebrate "Let's publish #{version}"
-        version = Models::Version.new projects.manifold_source.manifold_version_file_current_value
-        staging_branch = "build/#{version}"
+        version_object = Models::Version.new version
+        staging_branch = "build/#{version_object}"
 
         # Move each repo into the correct state.
         projects.each do |project|
-          compose(Interactions::Project::Prepare, inputs.merge(project: project, version: version))
+          compose(Interactions::Project::Prepare, inputs.merge(project: project, version: version_object))
         end
 
-        # Publish the packages and docker images
-        compose(Interactions::Publish::Omnibus, inputs.merge(version: version))
-        compose(Interactions::Publish::Docker, inputs.merge(version: version))
-        compose(Interactions::Publish::Documentation, inputs.merge(version: version))
+        unless options["only_source"]
+          # Publish the packages and docker images
+          compose(Interactions::Publish::Omnibus, inputs.merge(version: version_object))
+          compose(Interactions::Publish::Docker, inputs.merge(version: version_object))
+          compose(Interactions::Publish::Documentation, inputs.merge(version: version_object))
 
-        # Update documentation
-        compose(Interactions::Publish::Documentation, inputs.merge(version: version))
+          # Update documentation
+          compose(Interactions::Publish::Documentation, inputs.merge(version: version_object))
+        end
 
         # Open PRs for the various projects
         projects.each do |project|
-          compose(Interactions::Project::OpenPr, inputs.merge(project: project, version: version))
+          compose(Interactions::Project::OpenPr, inputs.merge(project: project, version: version_object))
         end
 
         # Approve PRS
@@ -51,21 +54,13 @@ module Interactions
           prompt.keypress("When you've accepted all the PRs, press any key to continue")
         end
 
-        # Deploy the documentation
-        say 'Now we deploy the documentation.'
-        if prompt.yes? 'Deploy docs?'
-          manifold_docs_deploy.gem_install_bundler('1.17.2')
-          manifold_docs_deploy.bundle_install
-          manifold_docs_deploy.deploy
-        end
-
         # Tag repositories
         say 'Great, the repos are all good to go. Time to tag this release.'
         return unless prompt.yes? 'Ready to tag?'
 
         projects.each do |project|
-          if project.tagged?(version)
-            warn "This project has already been tagged at #{version}", project
+          if project.tagged?(version_object)
+            warn "This project has already been tagged at #{version_object}", project
             warn "Skipping. You'll have to manually fix this."
             next
           end
@@ -73,7 +68,7 @@ module Interactions
           project.git.branch('master').checkout
           compose(Git::Fetch, inputs.merge(project: project))
           project.hard_reset('origin/master')
-          compose(Git::Tag, inputs.merge(project: project, version: version))
+          compose(Git::Tag, inputs.merge(project: project, version: version_object))
           compose(Git::Push, inputs.merge(project: project, branch: 'master'))
         end
       end

@@ -47,6 +47,7 @@ module Manifold
       method_option :branch, type: :string, default: 'master', desc: "If you're not building an existing tag, the release will be built from this branch"
       method_option :no_overwrite, type: :boolean, default: false, desc: 'If true, existing packages will not be overwritten.'
       method_option :regenerate_manifest, type: :boolean, default: false, desc: 'If true, the omnibus package manifest will always be regenerated'
+      method_option :only_source, type: :boolean, default: false, desc: 'If true, repos will be tagged but not packages will be published'
       def publish(version)
         if options[:help]
           invoke :help, ['publish']

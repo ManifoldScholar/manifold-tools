@@ -4,11 +4,11 @@ module Models
   module Projects
     class ManifoldDocs < Base
       attr_lazy_reader :manifest_file do
-        path.join '_data/releases.json'
+        path.join 'releases.json'
       end
 
       attr_lazy_reader :current_file do
-        path.join '_data/current.json'
+        path.join 'current.json'
       end
 
       def manifest_file_relative_path

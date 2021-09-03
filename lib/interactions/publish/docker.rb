@@ -36,11 +36,11 @@ module Interactions
       def image_names
         dirs = Pathname.new(File.join(project.path, 'dockerfiles')).children.select(&:directory?)
         images = dirs.map { |d| File.basename(d) }
-        images.rotate(images.find_index('manifold_api_base'))
+        images.rotate(images.find_index('manifold-api'))
       end
 
       def versioned_image(image, the_version = default_version)
-        "manifoldscholar/#{image}:#{the_version}"
+        "manifoldscholarship/#{image}:#{the_version}"
       end
 
       def interaction_key
