@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'attr_lazy'
+require 'attr_lazy_reader'
 
 module Models
   class Environment

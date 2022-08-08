@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'active_interaction', '~> 3.0'
   spec.add_dependency 'activesupport', ">= 6.0.3.1"
-  spec.add_dependency 'attr_lazy'
+  spec.add_dependency 'attr_lazy_reader'
   spec.add_dependency 'awesome_print'
   spec.add_dependency 'cleanroom'
   spec.add_dependency 'commander'

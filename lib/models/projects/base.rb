@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'attr_lazy'
+require 'attr_lazy_reader'
 require 'git'
 require 'tty-command'
 require 'pastel'
