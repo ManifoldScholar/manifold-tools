@@ -53,7 +53,7 @@ https://github.com/ManifoldScholar/manifold-documentation-deploy/
 Build Manifold with the following command. Update the version to whatever version you want
 to build:
 ```
-./exe/manifold-tools build v5.0.0
+./exe/manifold-tools build v7.0.0-rc.7
 ```
 
 Building will perform the following tasks:
@@ -64,6 +64,13 @@ Building will perform the following tasks:
 - Update the MANIFOLD_VERSION file in each repository
 - Build Omnibus packages for ubuntu16, ubuntu18, and centos7
 - Build docker images
+
+To build and tag Manifold without publishing packages, which is useful for betas and release candidates, use these commands:
+
+```
+./exe/manifold-tools build v7.0.0-rc.6 --platform=none
+./exe/manifold-tools publish v7.0.0-rc.6 --only-source
+```
 
 ### Publishing Manifold
 

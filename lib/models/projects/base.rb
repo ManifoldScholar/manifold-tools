@@ -301,7 +301,7 @@ module Models
         end
 
         unless status.success?
-          warn err
+          warn data[:err].join
 
           raise "Failed to run #{args * " "}"
         end
