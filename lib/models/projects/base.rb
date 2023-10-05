@@ -227,6 +227,8 @@ module Models
           out, err = cmd.run("hub pull-request -m \"#{message}\" -b #{base}")
           return !out.empty?
         end
+      rescue TTY::Command::ExitError
+        false
       end
 
       def describe(commit)

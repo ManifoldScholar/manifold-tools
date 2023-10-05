@@ -48,6 +48,9 @@ module Manifold
       method_option :no_overwrite, type: :boolean, default: false, desc: 'If true, existing packages will not be overwritten.'
       method_option :regenerate_manifest, type: :boolean, default: false, desc: 'If true, the omnibus package manifest will always be regenerated'
       method_option :only_source, type: :boolean, default: false, desc: 'If true, repos will be tagged but not packages will be published'
+      method_option :without_omnibus, type: :boolean, default: false, desc: 'Do not publish omnibus packages'
+      method_option :without_docker, type: :boolean, default: false, desc: 'Do not publish docker images'
+      method_option :without_docs, type: :boolean, default: false, desc: 'Do not publish docs'
       def publish(version)
         if options[:help]
           invoke :help, ['publish']

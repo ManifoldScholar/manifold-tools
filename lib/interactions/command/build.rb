@@ -21,13 +21,15 @@ module Interactions
         end
 
         # Do the packaging.
-        projects.manifold_omnibus.gem_install_bundler('1.17.2')
+        projects.manifold_omnibus.gem_install_bundler('2.1.4')
         projects.manifold_omnibus.bundle_install
 
-        compose(Interactions::Package::Omnibus, inputs.merge(platform: 'ubuntu18', version: sem_version, with_confirmation: false, skip_prepare: true)) if ubuntu18?
+        compose(Interactions::Package::Omnibus, inputs.merge(platform: 'ubuntu22', version: sem_version, with_confirmation: false, skip_prepare: true)) if ubuntu22?
+        compose(Interactions::Package::Omnibus, inputs.merge(platform: 'centos9', version: sem_version, with_confirmation: false, skip_prepare: true)) if centos9?
         compose(Interactions::Package::Omnibus, inputs.merge(platform: 'ubuntu20', version: sem_version, with_confirmation: false, skip_prepare: true)) if ubuntu20?
-        compose(Interactions::Package::Omnibus, inputs.merge(platform: 'centos7', version: sem_version, with_confirmation: false, skip_prepare: true)) if centos7?
         compose(Interactions::Package::Omnibus, inputs.merge(platform: 'centos8', version: sem_version, with_confirmation: false, skip_prepare: true)) if centos8?
+        compose(Interactions::Package::Omnibus, inputs.merge(platform: 'centos7', version: sem_version, with_confirmation: false, skip_prepare: true)) if centos7?
+
         compose(Interactions::Package::Docker, inputs.merge(version: sem_version, with_confirmation: false)) if docker?
 
         say 'Build complete'
@@ -35,12 +37,18 @@ module Interactions
 
       private
 
-      def ubuntu18?
-        all_platforms? || platform == "ubuntu18"
+      def ubuntu22?
+        all_platforms? || platform == "ubuntu22"
       end
 
       def ubuntu20?
         all_platforms? || platform == "ubuntu20"
+      end
+
+      def centos9?
+        # TODO: Enable centos9 support
+        return false
+        all_platforms? || platform == "centos9"
       end
 
       def centos8?

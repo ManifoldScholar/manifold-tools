@@ -27,15 +27,13 @@ module Interactions
           compose(Interactions::Project::Prepare, inputs.merge(project: project, version: version_object))
         end
 
-        unless options["only_source"]
-          # Publish the packages and docker images
-          compose(Interactions::Publish::Omnibus, inputs.merge(version: version_object))
-          compose(Interactions::Publish::Docker, inputs.merge(version: version_object))
-          compose(Interactions::Publish::Documentation, inputs.merge(version: version_object))
+        with_omnibus = !options["only_source"] && !options["without_omnibus"]
+        with_docker = !options["only_source"] && !options["without_docker"]
+        with_docs = !options["only_source"] && !options["without_docs"]
 
-          # Update documentation
-          compose(Interactions::Publish::Documentation, inputs.merge(version: version_object))
-        end
+        compose(Interactions::Publish::Omnibus, inputs.merge(version: version_object)) if with_omnibus
+        compose(Interactions::Publish::Docker, inputs.merge(version: version_object)) if with_docker
+        compose(Interactions::Publish::Documentation, inputs.merge(version: version_object)) if with_docs
 
         # Open PRs for the various projects
         projects.each do |project|

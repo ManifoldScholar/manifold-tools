@@ -53,7 +53,7 @@ https://github.com/ManifoldScholar/manifold-documentation-deploy/
 Build Manifold with the following command. Update the version to whatever version you want
 to build:
 ```
-./exe/manifold-tools build v7.0.0-rc.7
+./exe/manifold-tools build v7.0.2
 ```
 
 Building will perform the following tasks:
