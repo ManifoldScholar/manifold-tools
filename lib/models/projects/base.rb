@@ -238,14 +238,15 @@ module Models
       end
 
       def bundle_install
-        Dir.chdir(@path) do
-          return cmd(:quiet).run('bundle install')
-        end
+        project_ruby_command "bundle", "install", in_directory: @path
+        # Dir.chdir(@path) do
+        #   return cmd(:pretty).run('bundle install')
+        # end
       end
 
       def gem_install_bundler(version)
         Dir.chdir(@path) do
-          return cmd(:quiet).run("gem install bundler:#{version}")
+          return cmd(:quiet).run("RUBYOPT='-W0' gem install bundler:#{version} --no-document")
         end
       end
 
@@ -286,32 +287,40 @@ module Models
       end
 
       def project_ruby_command(*args, in_directory: @path)
-        # out, err, status = Open3.capture3(project_ruby_env, *args, chdir: in_directory)
+        # Clear bundler environment to allow sub-application to use its own Gemfile
+        clean_env = if Bundler.respond_to?(:with_unbundled_env)
+                      # Bundler 2.1+
+                      proc { |&block| Bundler.with_unbundled_env(&block) }
+                    else
+                      # Bundler < 2.1
+                      proc { |&block| Bundler.with_clean_env(&block) }
+                    end
+
         status = nil
         data = {:out => [], :err => []}
-        Open3.popen3(project_ruby_env, *args, chdir: in_directory) do |stdin, stdout, stderr, thread|
-          { :out => stdout, :err => stderr }.each do |key, stream|
-            Thread.new do
-              until (raw_line = stream.gets).nil? do
-                data[key].push raw_line
-                print_message raw_line
+
+        clean_env.call do
+          Open3.popen3(project_ruby_env, *args, chdir: in_directory) do |stdin, stdout, stderr, thread|
+            { :out => stdout, :err => stderr }.each do |key, stream|
+              Thread.new do
+                until (raw_line = stream.gets).nil? do
+                  data[key].push raw_line
+                  print_message raw_line
+                end
               end
             end
+            status = thread.value
+            thread.join
           end
-          status = thread.value # Process::Status object returned.
-          thread.join # don't exit until the external process is done
         end
 
         unless status.success?
           warn data[:err].join
-
           raise "Failed to run #{args * " "}"
         end
 
         data[:out].join("\n")
-
       end
-
       def project_ruby_env
         {}.tap do |h|
           h["BUNDLE_GEMFILE"] = project_gemfile

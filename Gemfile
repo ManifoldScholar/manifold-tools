@@ -2,7 +2,54 @@
 
 source 'https://rubygems.org'
 
-git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
+ruby '3.2.3' # or whatever Ruby version you're targeting
 
-# Specify your gem's dependencies in manifold-tools.gemspec
-gemspec
+# Runtime dependencies
+gem 'active_interaction', '~> 3.8.3'
+gem 'activesupport', '~> 6.1.7'
+gem 'attr_lazy_reader', '~> 0.1.0'
+gem 'awesome_print', '~> 1.9.2'
+gem 'cleanroom', '~> 1.0.0'
+gem 'commander', '~> 4.6.0'
+gem 'dotenv', '~> 2.7.6'
+gem 'dux', '~> 0.8.0'
+gem 'faraday-http-cache', '~> 2.2.0'
+gem 'git', '~> 1.8.1'
+gem 'google-cloud', '~> 0.64.0'
+gem 'google-cloud-storage', '~> 1.47.0'
+gem 'kramdown', '~> 2.3.1'
+gem 'octokit', '~> 4.21.0'
+gem 'oj', '~> 3.11.5'
+gem 'pastel', '~> 0.8.0'
+gem 'pry', '~> 0.14.0'
+gem 'ptools', '~> 1.4.2'
+gem 'rubocop', '~> 1.14.0'
+gem 'semantic', '~> 1.6.1'
+gem 'thor', '~> 1.3'
+gem 'tty-box', '~> 0.7.0'
+gem 'tty-color', '~> 0.6.0'
+gem 'tty-command', '~> 0.10.1'
+gem 'tty-config', '~> 0.4.0'
+gem 'tty-cursor', '~> 0.7.1'
+gem 'tty-editor', '~> 0.6.0'
+gem 'tty-file', '~> 0.10.0'
+gem 'tty-font', '~> 0.5.0'
+gem 'tty-logger', '~> 0.6.0'
+gem 'tty-markdown', '~> 0.7.0'
+gem 'tty-pager', '~> 0.14.0'
+gem 'tty-pie', '~> 0.4.0'
+gem 'tty-platform', '~> 0.3.0'
+gem 'tty-progressbar', '~> 0.18.2'
+gem 'tty-prompt', '~> 0.23.1'
+gem 'tty-screen', '~> 0.8.1'
+gem 'tty-spinner', '~> 0.9.3'
+gem 'tty-table', '~> 0.12.0'
+gem 'tty-tree', '~> 0.4.0'
+gem 'tty-which', '~> 0.4.2'
+gem 'zeitwerk', '~> 2.6.0'
+
+group :development, :test do
+  gem 'bundler', '>= 2.2.17'
+  gem 'rake', '~> 12.3.3'
+  gem 'rspec', '~> 3.10.0'
+end
