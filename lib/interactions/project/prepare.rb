@@ -53,9 +53,8 @@ module Interactions
           say "Manifold version file needs to be updated (currently #{project.manifold_version_file_current_value})", project
           compose(Interactions::Build::VersionFile, inputs.merge(project: project, version: version))
           if project == projects.manifold_source
-            say 'Project is manifold_source. Building client and changelog.', project
+            say 'Project is manifold_source. Building client.', project
             compose(Interactions::Build::Client, inputs)
-            # compose(Interactions::Build::Changelog, inputs.merge(unreleased_version: version, refresh: true))
           end
         end
       end
