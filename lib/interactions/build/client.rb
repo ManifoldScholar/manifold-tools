@@ -15,8 +15,7 @@ module Interactions
         if options.noop
           whisper '...skipping manifold client build due to --noop flag', manifold_source
         else
-          _out, err = manifold_source.build_client
-          errors.add('manifold_source', err) unless err.empty?
+          manifold_source.build_client
         end
       end
     end

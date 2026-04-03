@@ -21,14 +21,12 @@ module Interactions
         end
 
         # Do the packaging.
-        projects.manifold_omnibus.gem_install_bundler('2.1.4')
+        projects.manifold_omnibus.gem_install_bundler('2.6.9')
         projects.manifold_omnibus.bundle_install
 
         compose(Interactions::Package::Omnibus, inputs.merge(platform: 'ubuntu22', version: sem_version, with_confirmation: false, skip_prepare: true)) if ubuntu22?
         compose(Interactions::Package::Omnibus, inputs.merge(platform: 'centos9', version: sem_version, with_confirmation: false, skip_prepare: true)) if centos9?
         compose(Interactions::Package::Omnibus, inputs.merge(platform: 'ubuntu20', version: sem_version, with_confirmation: false, skip_prepare: true)) if ubuntu20?
-        compose(Interactions::Package::Omnibus, inputs.merge(platform: 'centos8', version: sem_version, with_confirmation: false, skip_prepare: true)) if centos8?
-        compose(Interactions::Package::Omnibus, inputs.merge(platform: 'centos7', version: sem_version, with_confirmation: false, skip_prepare: true)) if centos7?
 
         compose(Interactions::Package::Docker, inputs.merge(version: sem_version, with_confirmation: false)) if docker?
 

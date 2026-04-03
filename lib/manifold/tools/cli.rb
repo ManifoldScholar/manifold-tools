@@ -1,15 +1,6 @@
 # frozen_string_literal: true
 
 require 'thor'
-require 'zeitwerk'
-require 'pry'
-require 'active_support'
-require 'active_support/core_ext'
-
-loader = Zeitwerk::Loader.for_gem
-loader.ignore("#{__dir__}/version.rb")
-loader.push_dir("#{File.expand_path("../..", __dir__)}")
-loader.setup
 
 module Manifold
   module Tools
@@ -30,10 +21,10 @@ module Manifold
 
       desc 'clean', 'cleans the underlying repositories'
       method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
+                    desc: 'Display usage information'
       def clean(*)
         if options[:help]
-          invoke :help, ['pusclean']
+          invoke :help, ['clean']
         else
           require_relative 'commands/clean'
           Manifold::Tools::Commands::Clean.new(options).execute
@@ -42,7 +33,7 @@ module Manifold
 
       desc 'publish VERSION', 'Commits changes and tags repositories. Pushes repos, uploads packages, and published docs.'
       method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
+                    desc: 'Display usage information'
       method_option :skip_checks, type: :boolean, default: false, desc: 'If true, manifold-tools will not check for missing packages.'
       method_option :branch, type: :string, default: 'master', desc: "If you're not building an existing tag, the release will be built from this branch"
       method_option :no_overwrite, type: :boolean, default: false, desc: 'If true, existing packages will not be overwritten.'
@@ -62,7 +53,7 @@ module Manifold
 
       desc 'package PLATFORM', 'Create all operating system packages'
       method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
+                    desc: 'Display usage information'
       def package(platform)
         if options[:help]
           invoke :help, ['package']
@@ -77,7 +68,6 @@ module Manifold
       method_option :branch, type: :string, default: 'master', desc: "If you're not building an existing tag, the release will be built from this branch"
       method_option :no_overwrite, type: :boolean, default: false, desc: 'If true, existing packages will not be overwritten.'
       def build(version, platform = "all")
-
         if options[:help]
           invoke :help, ['build']
         else
@@ -88,7 +78,7 @@ module Manifold
 
       desc 'configure', 'Configure manifold-tools.'
       method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
+                    desc: 'Display usage information'
       def configure(*)
         if options[:help]
           invoke :help, ['configure']
@@ -100,9 +90,9 @@ module Manifold
 
       desc 'changelog', 'Generate the current changelog.'
       method_option :help, aliases: '-h', type: :boolean,
-                           desc: 'Display usage information'
+                    desc: 'Display usage information'
       method_option :refresh, type: :boolean,
-                              desc: 'Refreshes pull request data from Github'
+                    desc: 'Refreshes pull request data from Github'
       def changelog(*)
         if options[:help]
           invoke :help, ['changelog']
